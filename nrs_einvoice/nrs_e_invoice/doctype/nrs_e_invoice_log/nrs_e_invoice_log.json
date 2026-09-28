@@ -1,0 +1,30 @@
+{
+ "doctype": "DocType",
+ "name": "NRS E-Invoice Log",
+ "module": "NRS E-Invoice",
+ "custom": 0,
+ "engine": "InnoDB",
+ "autoname": "hash",
+ "in_create": 1,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "modified": "2026-09-28 00:00:00.000000",
+ "field_order": ["reference_doctype", "reference_name", "action", "status", "http_status", "col1", "method", "url", "sec_body", "request", "response"],
+ "fields": [
+  {"fieldname": "reference_doctype", "fieldtype": "Link", "label": "Reference DocType", "options": "DocType", "read_only": 1},
+  {"fieldname": "reference_name", "fieldtype": "Dynamic Link", "label": "Reference", "options": "reference_doctype", "read_only": 1, "in_list_view": 1},
+  {"fieldname": "action", "fieldtype": "Data", "label": "Action", "read_only": 1, "in_list_view": 1},
+  {"fieldname": "status", "fieldtype": "Select", "label": "Status", "options": "Success\nFailed", "read_only": 1, "in_list_view": 1, "in_standard_filter": 1},
+  {"fieldname": "http_status", "fieldtype": "Int", "label": "HTTP Status", "read_only": 1},
+  {"fieldname": "col1", "fieldtype": "Column Break"},
+  {"fieldname": "method", "fieldtype": "Data", "label": "Method", "read_only": 1},
+  {"fieldname": "url", "fieldtype": "Small Text", "label": "URL", "read_only": 1},
+  {"fieldname": "sec_body", "fieldtype": "Section Break"},
+  {"fieldname": "request", "fieldtype": "Code", "label": "Request", "options": "JSON", "read_only": 1},
+  {"fieldname": "response", "fieldtype": "Code", "label": "Response", "options": "JSON", "read_only": 1}
+ ],
+ "permissions": [
+  {"role": "System Manager", "read": 1, "delete": 1},
+  {"role": "Accounts Manager", "read": 1}
+ ]
+}
