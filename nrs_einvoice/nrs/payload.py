@@ -19,6 +19,34 @@ def _address(name):
     }
 
 
+def _phone(v):
+    v = "".join(ch for ch in cstr(v) if ch.isdigit() or ch == "+")
+    if not v or v.startswith("+"):
+        return v
+    if v.startswith("234"):
+        return "+" + v
+    if v.startswith("0"):
+        return "+234" + v[1:]
+    return "+" + v
+
+
+def _company_address(si):
+    if si.company_address:
+        return si.company_address
+    try:
+        from erpnext.setup.doctype.company.company import get_default_company_address
+        return get_default_company_address(si.company)
+    except Exception:
+        return None
+
+
+def _customer_address(si):
+    if si.customer_address:
+        return si.customer_address
+    from frappe.contacts.doctype.address.address import get_default_address
+    return get_default_address("Customer", si.customer)
+
+
 def _vat_rate(si):
     for t in si.taxes or []:
         if flt(t.rate):
@@ -49,17 +77,17 @@ def build_payload(si, s, irn):
             "party_name": company.company_name,
             "tin": company.tax_id,
             "email": s.supplier_email or company.email,
-            "telephone": s.supplier_phone or company.phone_no,
+            "telephone": _phone(s.supplier_phone or company.phone_no),
             "business_description": s.business_description or "",
-            "postal_address": _address(si.company_address),
+            "postal_address": _address(_company_address(si)),
         },
         "accounting_customer_party": {
             "party_name": si.customer_name,
             "tin": customer.tax_id,
             "email": si.contact_email or customer.email_id,
-            "telephone": si.contact_mobile or customer.mobile_no,
+            "telephone": _phone(si.contact_mobile or customer.mobile_no),
             "business_description": cstr(customer.customer_details)[:300],
-            "postal_address": _address(si.customer_address),
+            "postal_address": _address(_customer_address(si)),
         },
         "payment_means": [{
             "payment_means_code": s.default_payment_means_code or "10",
