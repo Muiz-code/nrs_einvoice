@@ -28,7 +28,7 @@ def _extract_error(body):
         return None
     err = body.get("error")
     if isinstance(err, dict):
-        return err.get("public_message") or err.get("details") or err.get("message")
+        return err.get("details") or err.get("public_message") or err.get("message")
     if isinstance(err, str):
         return err
     return body.get("message")
