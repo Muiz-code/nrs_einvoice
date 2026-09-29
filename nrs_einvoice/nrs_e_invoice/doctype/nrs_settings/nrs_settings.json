@@ -5,7 +5,7 @@
  "issingle": 1,
  "custom": 0,
  "engine": "InnoDB",
- "modified": "2026-09-29 15:00:00.000000",
+ "modified": "2026-09-30 09:00:00.000000",
  "field_order": [
   "enabled",
   "environment",
@@ -28,6 +28,7 @@
   "col2",
   "default_hsn_code",
   "default_product_category",
+  "default_price_unit",
   "sec_behaviour",
   "submit_on_invoice_submit",
   "transmit_after_sign",
@@ -227,7 +228,7 @@
    "fieldname": "code_search_list",
    "fieldtype": "Select",
    "label": "List",
-   "options": "hs-codes\nservices-codes",
+   "options": "hs-codes\nservices-codes\nquantity-codes\nquantities\ninvoice-quantities\nunits\nuoms\nunit-of-measures",
    "default": "hs-codes"
   },
   {
@@ -240,6 +241,12 @@
    "fieldname": "search_codes",
    "fieldtype": "Button",
    "label": "Search Codes"
+  },
+  {
+   "fieldname": "default_price_unit",
+   "fieldtype": "Data",
+   "label": "Default Price Unit",
+   "description": "Unit code from the NRS quantity code list (use Look up NRS codes)"
   }
  ],
  "permissions": [
