@@ -47,6 +47,13 @@ def _customer_address(si):
     return get_default_address("Customer", si.customer)
 
 
+def _contact(si):
+    name = si.contact_person or frappe.db.get_value("Customer", si.customer, "customer_primary_contact")
+    if not name:
+        return {}
+    return frappe.db.get_value("Contact", name, ["email_id", "mobile_no", "phone"], as_dict=True) or {}
+
+
 def _vat_rate(si):
     for t in si.taxes or []:
         if flt(t.rate):
@@ -57,6 +64,7 @@ def _vat_rate(si):
 def build_payload(si, s, irn):
     company = frappe.get_cached_doc("Company", si.company)
     customer = frappe.get_cached_doc("Customer", si.customer)
+    contact = _contact(si)
     rate = _vat_rate(si)
     net = _money(si.net_total)
     tax = _money(si.total_taxes_and_charges)
@@ -84,8 +92,8 @@ def build_payload(si, s, irn):
         "accounting_customer_party": {
             "party_name": si.customer_name,
             "tin": customer.tax_id,
-            "email": si.contact_email or customer.email_id,
-            "telephone": _phone(si.contact_mobile or customer.mobile_no),
+            "email": si.contact_email or customer.email_id or contact.get("email_id"),
+            "telephone": _phone(si.contact_mobile or si.contact_phone or customer.mobile_no or contact.get("mobile_no") or contact.get("phone")),
             "business_description": cstr(customer.customer_details)[:300],
             "postal_address": _address(_customer_address(si)),
         },
@@ -138,6 +146,6 @@ def _line(item, s, currency):
         "price": {
             "price_amount": _money(item.net_rate),
             "base_quantity": 1,
-            "price_unit": f"{currency} per {item.uom}",
+            "price_unit": currency,
         },
     }
