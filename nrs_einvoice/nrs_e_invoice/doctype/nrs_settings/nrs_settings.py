@@ -18,3 +18,22 @@ def test_connection():
     res = NRSClient().resource("invoice-types")
     data = res.get("data") if isinstance(res, dict) else res
     return {"ok": True, "count": len(data) if isinstance(data, list) else None}
+
+
+@frappe.whitelist()
+def fetch_code_lists():
+    """Pull NRS reference lists. Each call is saved in NRS E-Invoice Log so codes can be looked up there."""
+    frappe.only_for("System Manager")
+    from nrs_einvoice.nrs.client import NRSClient, NRSError
+
+    client = NRSClient()
+    out = {}
+    for name in ["hs-codes", "services-codes", "service-codes", "product-categories", "tax-categories", "payment-means", "currencies"]:
+        try:
+            res = client.resource(name)
+            data = res.get("data") if isinstance(res, dict) else res
+            out[name] = len(data) if isinstance(data, list) else "ok"
+        except NRSError as e:
+            out[name] = f"not available ({e})"
+    frappe.db.commit()
+    return out
