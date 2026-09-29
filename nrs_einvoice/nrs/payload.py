@@ -48,7 +48,7 @@ def _customer_address(si):
 
 
 def _contact(si):
-    name = si.contact_person or frappe.db.get_value("Customer", si.customer, "customer_primary_contact")
+    name = si.get("contact_person") or frappe.db.get_value("Customer", si.customer, "customer_primary_contact")
     if not name:
         return {}
     return frappe.db.get_value("Contact", name, ["email_id", "mobile_no", "phone"], as_dict=True) or {}
@@ -92,8 +92,8 @@ def build_payload(si, s, irn):
         "accounting_customer_party": {
             "party_name": si.customer_name,
             "tin": customer.tax_id,
-            "email": si.contact_email or customer.email_id or contact.get("email_id"),
-            "telephone": _phone(si.contact_mobile or si.contact_phone or customer.mobile_no or contact.get("mobile_no") or contact.get("phone")),
+            "email": si.get("contact_email") or customer.get("email_id") or contact.get("email_id"),
+            "telephone": _phone(si.get("contact_mobile") or si.get("contact_phone") or customer.get("mobile_no") or contact.get("mobile_no") or contact.get("phone")),
             "business_description": cstr(customer.customer_details)[:300],
             "postal_address": _address(_customer_address(si)),
         },
