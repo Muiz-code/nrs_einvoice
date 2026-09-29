@@ -5,7 +5,7 @@
  "issingle": 1,
  "custom": 0,
  "engine": "InnoDB",
- "modified": "2026-09-29 12:00:00.000000",
+ "modified": "2026-09-29 15:00:00.000000",
  "field_order": [
   "enabled",
   "environment",
@@ -37,7 +37,11 @@
   "certificate",
   "sec_test",
   "test_connection",
-  "fetch_code_lists"
+  "fetch_code_lists",
+  "sec_codes",
+  "code_search_list",
+  "code_search_text",
+  "search_codes"
  ],
  "fields": [
   {
@@ -213,6 +217,29 @@
    "fieldname": "fetch_code_lists",
    "fieldtype": "Button",
    "label": "Fetch NRS Code Lists"
+  },
+  {
+   "fieldname": "sec_codes",
+   "fieldtype": "Section Break",
+   "label": "Look up NRS codes"
+  },
+  {
+   "fieldname": "code_search_list",
+   "fieldtype": "Select",
+   "label": "List",
+   "options": "hs-codes\nservices-codes",
+   "default": "hs-codes"
+  },
+  {
+   "fieldname": "code_search_text",
+   "fieldtype": "Data",
+   "label": "Search word or code",
+   "description": "e.g. data, telecom, computer, 8471, 9984"
+  },
+  {
+   "fieldname": "search_codes",
+   "fieldtype": "Button",
+   "label": "Search Codes"
   }
  ],
  "permissions": [
