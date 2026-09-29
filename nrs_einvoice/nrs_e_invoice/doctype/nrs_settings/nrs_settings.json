@@ -5,46 +5,222 @@
  "issingle": 1,
  "custom": 0,
  "engine": "InnoDB",
- "modified": "2026-09-28 00:00:00.000000",
- "field_order": ["enabled", "environment", "base_url", "timeout", "col1", "api_key", "api_secret",
-  "service_id", "business_id", "sec_supplier", "supplier_email", "supplier_phone", "business_description",
-  "sec_defaults", "default_invoice_type_code", "credit_note_type_code", "default_tax_category",
-  "default_payment_means_code", "col2", "default_hsn_code", "default_product_category",
-  "sec_behaviour", "submit_on_invoice_submit", "transmit_after_sign", "max_attempts",
-  "sec_qr", "public_key", "certificate", "sec_test", "test_connection"],
+ "modified": "2026-09-29 12:00:00.000000",
+ "field_order": [
+  "enabled",
+  "environment",
+  "base_url",
+  "timeout",
+  "col1",
+  "api_key",
+  "api_secret",
+  "service_id",
+  "business_id",
+  "sec_supplier",
+  "supplier_email",
+  "supplier_phone",
+  "business_description",
+  "sec_defaults",
+  "default_invoice_type_code",
+  "credit_note_type_code",
+  "default_tax_category",
+  "default_payment_means_code",
+  "col2",
+  "default_hsn_code",
+  "default_product_category",
+  "sec_behaviour",
+  "submit_on_invoice_submit",
+  "transmit_after_sign",
+  "max_attempts",
+  "sec_qr",
+  "public_key",
+  "certificate",
+  "sec_test",
+  "test_connection",
+  "fetch_code_lists"
+ ],
  "fields": [
-  {"fieldname": "enabled", "fieldtype": "Check", "label": "Enabled"},
-  {"fieldname": "environment", "fieldtype": "Select", "label": "Environment", "options": "Sandbox\nProduction", "default": "Sandbox"},
-  {"fieldname": "base_url", "fieldtype": "Data", "label": "Base URL", "reqd": 1, "default": "https://api.firsmbs.com/api/v1", "description": "Paste the sandbox base URL from your NRSMBS dashboard while testing."},
-  {"fieldname": "timeout", "fieldtype": "Int", "label": "Timeout (seconds)", "default": "30"},
-  {"fieldname": "col1", "fieldtype": "Column Break"},
-  {"fieldname": "api_key", "fieldtype": "Password", "label": "API Key", "reqd": 1},
-  {"fieldname": "api_secret", "fieldtype": "Password", "label": "API Secret", "reqd": 1},
-  {"fieldname": "service_id", "fieldtype": "Data", "label": "Service ID", "reqd": 1, "description": "8 character Service ID from the NRSMBS dashboard. Used to build the IRN."},
-  {"fieldname": "business_id", "fieldtype": "Data", "label": "Business ID", "reqd": 1},
-  {"fieldname": "sec_supplier", "fieldtype": "Section Break", "label": "Supplier (your business)"},
-  {"fieldname": "supplier_email", "fieldtype": "Data", "label": "Supplier Email", "options": "Email"},
-  {"fieldname": "supplier_phone", "fieldtype": "Data", "label": "Supplier Phone", "description": "International format, e.g. +2348012345678"},
-  {"fieldname": "business_description", "fieldtype": "Small Text", "label": "Business Description"},
-  {"fieldname": "sec_defaults", "fieldtype": "Section Break", "label": "Defaults"},
-  {"fieldname": "default_invoice_type_code", "fieldtype": "Data", "label": "Invoice Type Code", "default": "396"},
-  {"fieldname": "credit_note_type_code", "fieldtype": "Data", "label": "Credit Note Type Code", "default": "381"},
-  {"fieldname": "default_tax_category", "fieldtype": "Data", "label": "Tax Category ID", "default": "STANDARD_VAT"},
-  {"fieldname": "default_payment_means_code", "fieldtype": "Data", "label": "Payment Means Code", "default": "10"},
-  {"fieldname": "col2", "fieldtype": "Column Break"},
-  {"fieldname": "default_hsn_code", "fieldtype": "Data", "label": "Default HSN Code"},
-  {"fieldname": "default_product_category", "fieldtype": "Data", "label": "Default Product Category"},
-  {"fieldname": "sec_behaviour", "fieldtype": "Section Break", "label": "Behaviour"},
-  {"fieldname": "submit_on_invoice_submit", "fieldtype": "Check", "label": "Send to NRS when a Sales Invoice is submitted", "default": "1"},
-  {"fieldname": "transmit_after_sign", "fieldtype": "Check", "label": "Transmit to buyer after signing"},
-  {"fieldname": "max_attempts", "fieldtype": "Int", "label": "Max automatic retries", "default": "5"},
-  {"fieldname": "sec_qr", "fieldtype": "Section Break", "label": "QR Keys (only if NRS does not return a QR)", "collapsible": 1},
-  {"fieldname": "public_key", "fieldtype": "Long Text", "label": "Public Key", "description": "public_key from crypto_keys.txt in the NRSMBS dashboard (PEM or base64)."},
-  {"fieldname": "certificate", "fieldtype": "Long Text", "label": "Certificate", "description": "certificate value from crypto_keys.txt"},
-  {"fieldname": "sec_test", "fieldtype": "Section Break"},
-  {"fieldname": "test_connection", "fieldtype": "Button", "label": "Test Connection"}
+  {
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "label": "Enabled"
+  },
+  {
+   "fieldname": "environment",
+   "fieldtype": "Select",
+   "label": "Environment",
+   "options": "Sandbox\nProduction",
+   "default": "Sandbox"
+  },
+  {
+   "fieldname": "base_url",
+   "fieldtype": "Data",
+   "label": "Base URL",
+   "reqd": 1,
+   "default": "",
+   "description": "The Base URL from NRSMBS dashboard (My Account > API Integration) plus /api/v1"
+  },
+  {
+   "fieldname": "timeout",
+   "fieldtype": "Int",
+   "label": "Timeout (seconds)",
+   "default": "30"
+  },
+  {
+   "fieldname": "col1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "api_key",
+   "fieldtype": "Password",
+   "label": "API Key",
+   "reqd": 1
+  },
+  {
+   "fieldname": "api_secret",
+   "fieldtype": "Password",
+   "label": "API Secret",
+   "reqd": 1
+  },
+  {
+   "fieldname": "service_id",
+   "fieldtype": "Data",
+   "label": "Service ID",
+   "reqd": 1,
+   "description": "8 character Service ID from the NRSMBS dashboard. Used to build the IRN."
+  },
+  {
+   "fieldname": "business_id",
+   "fieldtype": "Data",
+   "label": "Business ID",
+   "reqd": 1
+  },
+  {
+   "fieldname": "sec_supplier",
+   "fieldtype": "Section Break",
+   "label": "Supplier (your business)"
+  },
+  {
+   "fieldname": "supplier_email",
+   "fieldtype": "Data",
+   "label": "Supplier Email",
+   "options": "Email"
+  },
+  {
+   "fieldname": "supplier_phone",
+   "fieldtype": "Data",
+   "label": "Supplier Phone",
+   "description": "International format, e.g. +2348012345678"
+  },
+  {
+   "fieldname": "business_description",
+   "fieldtype": "Small Text",
+   "label": "Business Description"
+  },
+  {
+   "fieldname": "sec_defaults",
+   "fieldtype": "Section Break",
+   "label": "Defaults"
+  },
+  {
+   "fieldname": "default_invoice_type_code",
+   "fieldtype": "Data",
+   "label": "Invoice Type Code",
+   "default": "381"
+  },
+  {
+   "fieldname": "credit_note_type_code",
+   "fieldtype": "Data",
+   "label": "Credit Note Type Code",
+   "default": "380"
+  },
+  {
+   "fieldname": "default_tax_category",
+   "fieldtype": "Data",
+   "label": "Tax Category ID",
+   "default": "STANDARD_VAT"
+  },
+  {
+   "fieldname": "default_payment_means_code",
+   "fieldtype": "Data",
+   "label": "Payment Means Code",
+   "default": "10"
+  },
+  {
+   "fieldname": "col2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "default_hsn_code",
+   "fieldtype": "Data",
+   "label": "Default HSN Code"
+  },
+  {
+   "fieldname": "default_product_category",
+   "fieldtype": "Data",
+   "label": "Default Product Category"
+  },
+  {
+   "fieldname": "sec_behaviour",
+   "fieldtype": "Section Break",
+   "label": "Behaviour"
+  },
+  {
+   "fieldname": "submit_on_invoice_submit",
+   "fieldtype": "Check",
+   "label": "Send to NRS when a Sales Invoice is submitted",
+   "default": "1"
+  },
+  {
+   "fieldname": "transmit_after_sign",
+   "fieldtype": "Check",
+   "label": "Transmit to buyer after signing"
+  },
+  {
+   "fieldname": "max_attempts",
+   "fieldtype": "Int",
+   "label": "Max automatic retries",
+   "default": "5"
+  },
+  {
+   "fieldname": "sec_qr",
+   "fieldtype": "Section Break",
+   "label": "QR Keys (only if NRS does not return a QR)",
+   "collapsible": 1
+  },
+  {
+   "fieldname": "public_key",
+   "fieldtype": "Long Text",
+   "label": "Public Key",
+   "description": "public_key from crypto_keys.txt in the NRSMBS dashboard (PEM or base64)."
+  },
+  {
+   "fieldname": "certificate",
+   "fieldtype": "Long Text",
+   "label": "Certificate",
+   "description": "certificate value from crypto_keys.txt"
+  },
+  {
+   "fieldname": "sec_test",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "test_connection",
+   "fieldtype": "Button",
+   "label": "Test Connection"
+  },
+  {
+   "fieldname": "fetch_code_lists",
+   "fieldtype": "Button",
+   "label": "Fetch NRS Code Lists"
+  }
  ],
  "permissions": [
-  {"role": "System Manager", "read": 1, "write": 1, "create": 1}
+  {
+   "role": "System Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1
+  }
  ]
 }
