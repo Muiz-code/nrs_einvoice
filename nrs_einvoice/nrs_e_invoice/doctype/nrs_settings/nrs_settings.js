@@ -1,4 +1,18 @@
 frappe.ui.form.on("NRS Settings", {
+	fetch_code_lists(frm) {
+		frappe.call({
+			method: "nrs_einvoice.nrs_e_invoice.doctype.nrs_settings.nrs_settings.fetch_code_lists",
+			freeze: true,
+			freeze_message: __("Fetching code lists from NRS..."),
+			callback(r) {
+				const rows = Object.entries(r.message || {}).map(([k, v]) => `<tr><td>${k}</td><td>${frappe.utils.escape_html(String(v))}</td></tr>`).join("");
+				frappe.msgprint({
+					title: __("NRS Code Lists"),
+					message: `<table class="table table-bordered">${rows}</table><p>Open <b>NRS E-Invoice Log</b> (action: resource) to see the full lists.</p>`,
+				});
+			},
+		});
+	},
 	test_connection(frm) {
 		frappe.call({
 			method: "nrs_einvoice.nrs_e_invoice.doctype.nrs_settings.nrs_settings.test_connection",
