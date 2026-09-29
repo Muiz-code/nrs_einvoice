@@ -128,7 +128,7 @@ def build_payload(si, s, irn):
 
 
 def _line(item, s, currency):
-    meta = frappe.db.get_value("Item", item.item_code, ["nrs_hsn_code", "nrs_product_category"], as_dict=True) or {}
+    meta = frappe.db.get_value("Item", item.item_code, ["nrs_hsn_code", "nrs_product_category", "nrs_price_unit"], as_dict=True) or {}
     return {
         "hsn_code": meta.get("nrs_hsn_code") or s.default_hsn_code,
         "product_category": meta.get("nrs_product_category") or s.default_product_category,
@@ -146,6 +146,6 @@ def _line(item, s, currency):
         "price": {
             "price_amount": _money(item.net_rate),
             "base_quantity": 1,
-            "price_unit": currency,
+            "price_unit": meta.get("nrs_price_unit") or s.default_price_unit or "EA",
         },
     }
