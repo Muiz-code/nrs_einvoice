@@ -28,7 +28,7 @@ def fetch_code_lists():
 
     client = NRSClient()
     out = {}
-    for name in ["hs-codes", "services-codes", "service-codes", "product-categories", "tax-categories", "payment-means", "currencies"]:
+    for name in ["hs-codes", "services-codes", "tax-categories", "payment-means", "currencies", "quantity-codes", "quantities", "invoice-quantities", "units", "uoms", "unit-of-measures"]:
         try:
             res = client.resource(name)
             data = res.get("data") if isinstance(res, dict) else res
@@ -45,18 +45,20 @@ def search_codes(list_name, text):
     frappe.only_for("System Manager")
     from nrs_einvoice.nrs.client import NRSClient
 
-    if list_name not in ("hs-codes", "services-codes"):
+    allowed = ("hs-codes", "services-codes", "quantity-codes", "quantities", "invoice-quantities", "units", "uoms", "unit-of-measures")
+    if list_name not in allowed:
         frappe.throw("Unknown list")
     text = (text or "").strip().lower()
-    if len(text) < 2:
-        frappe.throw("Type at least 2 characters to search")
+    show_all = text in ("*", "all")
+    if not show_all and len(text) < 2:
+        frappe.throw("Type at least 2 characters to search, or * to show everything")
     res = NRSClient().resource(list_name)
     data = res.get("data") if isinstance(res, dict) else res
     out = []
     for row in data or []:
         blob = " ".join(str(v) for v in row.values()).lower() if isinstance(row, dict) else str(row).lower()
-        if text in blob:
+        if show_all or text in blob:
             out.append(row)
-        if len(out) >= 60:
+        if len(out) >= 200:
             break
     return out
