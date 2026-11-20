@@ -67,6 +67,10 @@ def make_custom_fields():
                  "insert_after": "nrs_qr_code", "hidden": 1, **ro},
                 {"fieldname": "nrs_qr_preview", "label": "NRS QR Code", "fieldtype": "HTML",
                  "insert_after": "nrs_qr_image", "print_hide": 1},
+                {"fieldname": "nrs_payment_details", "label": "Payment Details (bank)",
+                 "fieldtype": "Link", "options": "Terms and Conditions",
+                 "insert_after": "nrs_qr_preview", "allow_on_submit": 1, "print_hide": 1,
+                 "description": "Bank account printed under Payment Details. Can be changed after submit."},
             ],
             "Item": [
                 {"fieldname": "nrs_hsn_code", "label": "NRS HSN Code", "fieldtype": "Data",
