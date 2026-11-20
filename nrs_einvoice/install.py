@@ -3,6 +3,39 @@ from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
 
 def after_install():
     make_custom_fields()
+    ensure_print_format()
+
+
+def ensure_print_format():
+    """Create/refresh the NRS E-Invoice print format from the app's JSON and make it
+    the Sales Invoice default when none is set. Safe to run on every migrate."""
+    import json
+    import os
+
+    import frappe
+
+    path = frappe.get_app_path("nrs_einvoice", "nrs_e_invoice", "print_format", "nrs_e_invoice", "nrs_e_invoice.json")
+    with open(path) as f:
+        data = json.load(f)
+    if frappe.db.exists("Print Format", data["name"]):
+        doc = frappe.get_doc("Print Format", data["name"])
+        doc.update({k: v for k, v in data.items() if k not in ("doctype", "name")})
+        doc.flags.ignore_permissions = True
+        doc.save()
+    else:
+        doc = frappe.get_doc(data)
+        doc.flags.ignore_permissions = True
+        doc.insert()
+
+    current = frappe.db.get_value(
+        "Property Setter",
+        {"doc_type": "Sales Invoice", "property": "default_print_format"},
+        "value",
+    )
+    if not current:
+        from frappe.custom.doctype.property_setter.property_setter import make_property_setter
+        make_property_setter("Sales Invoice", None, "default_print_format", data["name"], "Data", for_doctype=True)
+    frappe.db.commit()
 
 
 def make_custom_fields():

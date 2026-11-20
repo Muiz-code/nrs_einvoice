@@ -6,7 +6,7 @@ app_license = "MIT"
 required_apps = ["erpnext"]
 
 after_install = "nrs_einvoice.install.after_install"
-after_migrate = ["nrs_einvoice.install.make_custom_fields"]
+after_migrate = ["nrs_einvoice.install.make_custom_fields", "nrs_einvoice.install.ensure_print_format"]
 
 doctype_js = {"Sales Invoice": "public/js/sales_invoice.js"}
 
