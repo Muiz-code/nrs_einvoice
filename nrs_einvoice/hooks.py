@@ -13,6 +13,7 @@ doctype_js = {"Sales Invoice": "public/js/sales_invoice.js"}
 doc_events = {
     "Sales Invoice": {
         "on_submit": "nrs_einvoice.nrs.submission.enqueue_submission",
+        "on_trash": "nrs_einvoice.nrs.submission.delete_logs_on_trash",
     }
 }
 
@@ -21,3 +22,5 @@ scheduler_events = {
         "*/15 * * * *": ["nrs_einvoice.nrs.submission.retry_pending"],
     }
 }
+
+ignore_links_on_delete = ["NRS E-Invoice Log"]

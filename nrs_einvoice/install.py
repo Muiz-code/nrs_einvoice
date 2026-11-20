@@ -32,6 +32,8 @@ def make_custom_fields():
                  "insert_after": "nrs_error", "hidden": 1, **ro},
                 {"fieldname": "nrs_qr_image", "label": "QR Image", "fieldtype": "Long Text",
                  "insert_after": "nrs_qr_code", "hidden": 1, **ro},
+                {"fieldname": "nrs_qr_preview", "label": "NRS QR Code", "fieldtype": "HTML",
+                 "insert_after": "nrs_qr_image", "print_hide": 1},
             ],
             "Item": [
                 {"fieldname": "nrs_hsn_code", "label": "NRS HSN Code", "fieldtype": "Data",

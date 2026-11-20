@@ -48,10 +48,22 @@ def _customer_address(si):
 
 
 def _contact(si):
-    name = si.get("contact_person") or frappe.db.get_value("Customer", si.customer, "customer_primary_contact")
-    if not name:
-        return {}
-    return frappe.db.get_value("Contact", name, ["email_id", "mobile_no", "phone"], as_dict=True) or {}
+    """Invoice contact, else the customer's primary contact, else any contact linked to
+    the customer that has an email (Data Import leaves contact_person empty)."""
+    fields = ["email_id", "mobile_no", "phone"]
+    for name in (si.get("contact_person"), frappe.db.get_value("Customer", si.customer, "customer_primary_contact")):
+        if name:
+            c = frappe.db.get_value("Contact", name, fields, as_dict=True) or {}
+            if c.get("email_id"):
+                return c
+    linked = frappe.db.sql(
+        """select c.email_id, c.mobile_no, c.phone from `tabContact` c
+           join `tabDynamic Link` dl on dl.parent = c.name and dl.parenttype = 'Contact'
+           where dl.link_doctype = 'Customer' and dl.link_name = %s and ifnull(c.email_id, '') != ''
+           order by c.is_primary_contact desc, c.modified desc limit 1""",
+        si.customer, as_dict=True,
+    )
+    return linked[0] if linked else {}
 
 
 def _vat_rate(si):
@@ -92,7 +104,7 @@ def build_payload(si, s, irn):
         "accounting_customer_party": {
             "party_name": si.customer_name,
             "tin": customer.tax_id,
-            "email": si.get("contact_email") or customer.get("email_id") or contact.get("email_id"),
+            "email": si.get("contact_email") or customer.get("email_id") or contact.get("email_id") or "",
             "telephone": _phone(si.get("contact_mobile") or si.get("contact_phone") or customer.get("mobile_no") or contact.get("mobile_no") or contact.get("phone")),
             "business_description": cstr(customer.customer_details)[:300],
             "postal_address": _address(_customer_address(si)),
